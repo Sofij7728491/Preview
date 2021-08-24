@@ -1,0 +1,94 @@
+ $("body").on("click", "span.new_val", function (event)
+    {
+        event.stopPropagation();
+        console.log("click span.new_val");
+        var prop = $(this).attr("data-prop");
+        var thisis = $(this);
+        var val = $(this)
+            .text()
+            .trim();
+        var td = $(this).parents("td");
+        var prop_td = $(this)
+            .parents("td")
+            .attr("data-prop");
+        var hl = $(this).attr("data-hl");
+        $(this)
+            .removeClass("form-control")
+            .removeClass("new_val");
+        if ($(this).attr("data-type") == "L" || hl == "Y" || prop == "EXTRA")
+        {
+            //получаем списки для свойств
+            // var data = {};
+            // data['prop'] = prop;
+            // data['multy'] = $(this).attr('data-multy');
+            // data['hl'] = $(this).attr('data-hl');
+            // $.blockUI({ message: '<p>Пожалуйста подождите...</p>',css: { backgroundColor: '#f00', color: '#fff'}, overlayCSS: {backgroundColor: '#000', opacity: 0.1,cursor: 'wait'}});
+            // $(this).load(ajaxPath+'/ajax.php',{iblock:siteIblock, code:'enum',data:data, type:'new'}, function(){
+            //     $.unblockUI();
+            //     //дублируем на остальные товары
+            //     // $('tr.new-item').find('td.'+prop_td).find('span[data-prop='+prop+']').find("select").focus();
+            // });
+        } else if (prop == "PROVIDERS_SADOVOD" || prop == "IB_PROVIDER")
+        {
+            $(this)
+                .html(
+                    '<select class="form-control set_val" data-prop=' +
+                    prop +
+                    ' name="section"></select>'
+                )
+                .find("select")
+                .html(optionHTML[siteIblock])
+                .focus();
+        } else if (prop == "SECTION_PROV")
+        {
+            var catalogs = $("#catalogs").html();
+
+            $(this).html(
+                '<select class="form-control add_val" name="section"></select>'
+            );
+            $(this)
+                .find("select")
+                .html(catalogs)
+                .focus();
+        } else if (prop == "SERIES")
+        {
+            // if(val == '') val = randomStr(50);
+            // $(this).html("<input type='text' class='add_val' value=''>");
+            // $(this).find("input").focus();
+        } else if (prop == "IBLOCK_SECTION")
+        {
+            $(".cd-panel").addClass("is-visible");
+
+            $.blockUI({
+                message: "<p>Пожалуйста подождите...</p>",
+                css: { backgroundColor: "#f00", color: "#fff" },
+                overlayCSS: { backgroundColor: "#000", opacity: 0.1, cursor: "wait" }
+            });
+
+            $("#tree").load(
+                ajaxPath + "/ajax.php",
+                { code: "tree", id: siteIblock, type: "new" },
+                function ()
+                {
+                    $.unblockUI();
+                    $("#tree").focus();
+                }
+            );
+        } else if (prop == "PREVIEW_TEXT")
+        {
+            // $(this).html('<textarea type="text" rows="10" class="add_val"></textarea>');
+            // $(this).find("textarea").focus();
+        } else
+        {
+            // $(this).html("<input type='text' class='add_val' value=''>");
+            // $(this).find("input").focus();
+        }
+
+        if (prop == "COMPOS2" || prop == "CVET" || prop == "SEZON" || prop == "PROIZVODITEL")
+        {
+            $(this)
+                .parents("td")
+                .find(".slider-group")
+                .html("");
+        }
+    });
